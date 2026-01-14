@@ -12,22 +12,31 @@ def input_error(func):
 
     return inner
 
-
 def parse_input(user_input):
-    cmd, *args = user_input.split()
-    cmd = cmd.strip().lower()
-    return cmd, *args
+    try:
+        cmd, *args = user_input.split()
+        cmd = cmd.strip().lower()
+        return cmd, *args
+    except ValueError:
+        return f"Please write a command"
 
 @input_error
 def add_contact(args, contacts):
     name, phone = args
     if name not in contacts:
         contacts[name] = phone
-        variable = "added"
+        return f"The contact has been added"
     else:
+        return f"The contact already exists."
+    
+@input_error
+def change_contact(args, contacts):
+    name, phone = args
+    if name in contacts:
         contacts[name] = phone
-        variable = "changed"
-    return f"Contact {variable}."
+        return f"The contact has been changed"
+    else:
+        return f"This contact does not exist."
 
 @input_error
 def what_number(args, contacts):
@@ -51,8 +60,10 @@ def main():
             break
         elif command == "hello":
             print("How can I help you?")
-        elif command in ["add", "change"]:
+        elif command == "add":
             print(add_contact(args, contacts))
+        elif command == "change":
+            print(change_contact(args, contacts))
         elif command == "phone":
             print(what_number(args, contacts))
         elif command == "all":

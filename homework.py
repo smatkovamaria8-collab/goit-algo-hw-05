@@ -31,21 +31,17 @@ import re
 from typing import Callable
 
 #Створимо генератор, який знаходить числа і повертає їх
+#Я додала пробіл справа і зліва, щоб зловити числа, які потрібно
 def generator_numbers(text: str):
-    numbers = re.findall(r"\d+\.\d+", text)
+    numbers = re.findall(r" \d+\.\d+ ", text)
     for number in numbers:
-        yield number
+        yield float(number.strip())
 
 # Створимо функцію, яка використовує генератор для обчислення суми чисел у строці
 def sum_profit(text: str, func: Callable):
     gen = func(text)
     sum_number = 0
-    while True:
-        try:
-            number = next(gen)
-            sum_number += float(number)
-        except StopIteration:
-            break
+    sum_number = sum(gen)
     return sum_number
 
 
